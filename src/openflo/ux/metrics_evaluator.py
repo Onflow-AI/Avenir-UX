@@ -47,7 +47,7 @@ class UXMetricsEvaluator:
                 Each dict has keys: timestamp, state_before, action_type, state_after.
             reference_steps: Optional number of steps in the human reference trajectory
                 (e.g. Mind2Web's reference_length). When provided, trajectory_efficiency
-                is computed as reference_steps / actual_steps. When absent, only the
+                is computed as reference_steps / agent_steps. When absent, only the
                 raw step count is reported.
 
         Returns:
@@ -60,7 +60,7 @@ class UXMetricsEvaluator:
         oscillation_count, oscillation_pairs = self._oscillation_count(transitions)
 
         metrics = {
-            "actual_steps": s_actual,
+            "agent_steps": s_actual,
             "reference_steps": reference_steps,
             "trajectory_efficiency": efficiency,
             "state_revisitation_rate": revisitation_rate,
@@ -72,7 +72,7 @@ class UXMetricsEvaluator:
 
         efficiency_str = f"{efficiency:.3f}" if efficiency is not None else "N/A (no reference)"
         self.logger.info(
-            f"UX Metrics — Steps: {s_actual}, "
+            f"UX Metrics — Agent Steps: {s_actual}, "
             f"Efficiency: {efficiency_str}, "
             f"Revisitation: {revisitation_rate:.3f}, "
             f"Oscillations: {oscillation_count}"
@@ -182,13 +182,13 @@ class UXMetricsEvaluator:
 
         Args:
             metrics: Output from evaluate()
-            output_path: Directory path where ux_metrics_report.json will be written.
+            output_path: Directory path where step_count_trajectory_report.json will be written.
         """
         os.makedirs(output_path, exist_ok=True)
-        json_path = os.path.join(output_path, "ux_metrics_report.json")
+        json_path = os.path.join(output_path, "step_count_trajectory_report.json")
         try:
             with open(json_path, "w", encoding="utf-8") as f:
                 json.dump(metrics, f, indent=2, ensure_ascii=False)
-            self.logger.info(f"UX metrics report saved to: {json_path}")
+            self.logger.info(f"Step count trajectory report saved to: {json_path}")
         except Exception as e:
             self.logger.error(f"Failed to save UX metrics report: {e}")

@@ -1019,7 +1019,7 @@ class OpenFloAgent:
                     f"Oscillations: {metrics['oscillation_count']}"
                 )
             except Exception as e:
-                self.logger.error(f"UX Metrics report generation failed: {e}")
+                self.logger.error(f"Step count trajectory report generation failed: {e}")
 
     def _emergency_save(self, error_info="Unknown error"):
         """
