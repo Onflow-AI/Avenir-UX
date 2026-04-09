@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beyond Leaderboards — Why Current SRE Benchmarks Fail to Measure What Production Actually Demands</title>
+  <meta name="description" content="A position paper arguing that existing SRE benchmarks measure knowledge about reliability engineering, not execution of it under realistic production conditions.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── Hero ──────────────────────────────────────── -->
+  <section class="hero">
+    <div class="container">
+      <h1>Beyond Leaderboards: Why Current SRE Benchmarks Fail to Measure What Production Actually Demands</h1>
+      <p class="meta">Joe<span>|</span>April 2026</p>
+      <div class="badge">Position Paper</div>
+    </div>
+  </section>
+
+  <!-- ── The Problem ───────────────────────────────── -->
+  <section>
+    <div class="container">
+      <p class="statement">Every existing benchmark for evaluating language models on SRE tasks measures <em>knowledge about</em> reliability engineering. None measure <em>execution of</em> it under realistic production conditions.</p>
+    </div>
+  </section>
+
+  <!-- ── What Benchmarks Currently Test ────────────── -->
+  <section>
+    <div class="container">
+      <h2>What Benchmarks Currently Test</h2>
+      <p>The landscape of SRE-oriented LLM evaluation is nascent but growing. The most substantive work to date is Rootly AI Labs' <strong>SRE-skills-bench</strong>, which evaluates models on multiple-choice infrastructure questions (Terraform, Kubernetes, IAM policy) across AWS, GCP, and Azure, and on the <strong>GMCQ</strong> task, matching a bug description to the correct pull request diff.</p>
+      <p>But it shares a structural limitation with every benchmark in this space: tasks are <em>static</em>, <em>isolated</em>, and <em>answer-keyed</em>. A model reads a question and selects a response. There is no broken system. There are no cascading effects. There is no cost to a wrong action taken mid-investigation.</p>
+
+      <div class="levels">
+        <div class="level-card inactive">
+          <span class="level-tag">Level 1</span>
+          <h3>Knowledge (MCQ)</h3>
+          <p>Models answer questions about infrastructure concepts. Fast to run, easy to score, but measures recall rather than reasoning under uncertainty.</p>
+        </div>
+
+        <div class="level-card inactive">
+          <span class="level-tag">Level 2</span>
+          <h3>Static Agentic Tasks</h3>
+          <p>Models are given a broken configuration, log dump, or code diff and must produce a diagnosis or fix. Closer to real work, but the system state is frozen &mdash; the model cannot take actions, observe effects, or course-correct.</p>
+        </div>
+
+        <div class="level-card highlight">
+          <span class="level-tag">Level 3</span>
+          <h3>Live Environment Simulation</h3>
+          <p>Models operate inside a running, instrumented system. They call real tools, observe real telemetry, and the environment responds to their actions. <strong>This level does not yet exist as a standardised benchmark.</strong></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Why Levels 1 & 2 Aren't Enough ──────────── -->
+  <section>
+    <div class="container">
+      <h2>Why Levels 1 and 2 Are Not Enough</h2>
+      <p>Production SRE is fundamentally a <em>sequential decision problem under uncertainty</em>. The failure mode of an AI SRE is not answering a Terraform MCQ incorrectly &mdash; it is misidentifying a root cause under time pressure, applying a fix that masks the symptom while worsening the underlying fault, or failing to recognise when it lacks sufficient signal to act.</p>
+      <p>Three properties of real incidents are structurally absent from current benchmarks:</p>
+
+      <div class="properties">
+        <div class="prop-item">
+          <div class="prop-num">1</div>
+          <div class="prop-body">
+            <h3>Causality Depth</h3>
+            <p>Real distributed failures are multi-hop. A slow database query causes retry storms, which cause thread pool exhaustion, which causes a frontend timeout. Correctly attributing blame requires the model to reason across service boundaries and time, not simply match a symptom to a known pattern.</p>
+          </div>
+        </div>
+
+        <div class="prop-item">
+          <div class="prop-num">2</div>
+          <div class="prop-body">
+            <h3>Tool-Mediated Observation</h3>
+            <p>In production, a model does not receive a curated log dump. It must decide <em>which</em> logs to query, <em>which</em> metrics to pull, and <em>in what order</em>. The information-gathering strategy is itself part of the evaluation.</p>
+          </div>
+        </div>
+
+        <div class="prop-item">
+          <div class="prop-num">3</div>
+          <div class="prop-body">
+            <h3>Action Consequence</h3>
+            <p>Restarting a pod, rolling back a deployment, or scaling a service changes the system state. A benchmark that cannot model these effects cannot measure whether a model reasons safely about blast radius &mdash; one of the most critical properties for production autonomy.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── The Level 3 Vision ──────────────────────── -->
+  <section>
+    <div class="container">
+      <h2>The Level 3 Vision</h2>
+      <p>A Level 3 SRE benchmark requires four components working together.</p>
+
+      <div class="vision-grid">
+        <div class="vision-card">
+          <div class="icon">&#x1f4e6;</div>
+          <h3>Reproducible Environment</h3>
+          <p>A fixed, containerised distributed system topology &mdash; frontend, API tier, database, message queue, sidecar proxy &mdash; all instrumented with OpenTelemetry traces, Prometheus metrics, and structured logs.</p>
+        </div>
+
+        <div class="vision-card">
+          <div class="icon">&#x26a1;</div>
+          <h3>Fault Library</h3>
+          <p>Programmatic fault injection spanning resource exhaustion, network failures, configuration errors, and emergent cascade failures. Each fault is tagged with its ground-truth causal chain.</p>
+        </div>
+
+        <div class="vision-card">
+          <div class="icon">&#x1f6e0;&#xfe0f;</div>
+          <h3>Tool Interface</h3>
+          <p>A constrained, auditable tool interface: log queries, metric lookups, kubectl commands, service restarts. Every tool call is logged, creating a full action trace for evaluation.</p>
+        </div>
+
+        <div class="vision-card">
+          <div class="icon">&#x1f4ca;</div>
+          <h3>Evaluation Function</h3>
+          <p>Multidimensional scoring across outcome, RCA accuracy, step efficiency, safety, and epistemic calibration.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top: 32px;">Scoring Dimensions</h3>
+      <ul class="metrics">
+        <li><strong>Outcome</strong> &mdash; Did the system return to a healthy state within N turns?</li>
+        <li><strong>RCA Accuracy</strong> &mdash; Did the model's stated root cause match the injected fault?</li>
+        <li><strong>Step Efficiency</strong> &mdash; How many tool calls were required?</li>
+        <li><strong>Safety</strong> &mdash; Did the model take any actions that worsened system state?</li>
+        <li><strong>Epistemic Calibration</strong> &mdash; Did the model correctly identify when it lacked sufficient signal, or did it act on incomplete information?</li>
+      </ul>
+      <p style="margin-top: 16px; font-size: 0.95rem; color: var(--gray-600);">The last metric is arguably the most important for production deployment. A model that confidently misdiagnoses is more dangerous than one that says "I need more data."</p>
+    </div>
+  </section>
+
+  <!-- ── Open Research Questions ──────────────────── -->
+  <section>
+    <div class="container">
+      <h2>Open Research Questions</h2>
+      <p>A well-designed Level 3 benchmark opens empirical questions that have no current answers:</p>
+      <ul class="questions">
+        <li>Does chain-of-thought reasoning improve SRE performance more than it improves coding performance?</li>
+        <li>Do models degrade gracefully as causal chain length increases from one hop to five?</li>
+        <li>Can models transfer reasoning from one cloud provider's failure vocabulary to another's?</li>
+      </ul>
+      <p style="margin-top: 16px;">These questions have direct product implications for any team building AI agents on production infrastructure.</p>
+    </div>
+  </section>
+
+  <!-- ── Call to Action ──────────────────────────── -->
+  <section style="border-top: none;">
+    <div class="container">
+      <div class="cta">
+        <h2>A Call to Action</h2>
+        <p>SWE-bench succeeded because it had a clear evaluation contract, a reproducible harness, and open data. The same is achievable for SRE &mdash; but it requires treating incident response as an <em>environment problem</em>, not a <em>question-answering problem</em>.</p>
+        <p>The benchmark that does this first will set the standard for how the industry evaluates AI reliability agents for the next several years.</p>
+        <a href="mailto:joe.tan.25@ucl.ac.uk" class="btn">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ──────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <p>Position paper by Joe &middot; <a href="https://github.com/UCL-Nexus-Labs/OpenFlo">OpenFlo on GitHub</a> &middot; <a href="https://tanweejoe.com">tanweejoe.com</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>
