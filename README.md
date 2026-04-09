@@ -7,13 +7,11 @@
 > Built upon [Avenir-Web](https://github.com/Princeton-AI2-Lab/Avenir-Web) by the Princeton AI² Lab.
 
 **Authors:**
-[Wee Joe Tan](mailto:joe.tan.25@ucl.ac.uk)\*†,
-[Zi Rui Lucas Lim](mailto:zi.lim.25@ucl.ac.uk)\*†,
-[Shashank Durgad](mailto:shashank.durgad.25@ucl.ac.uk)\*†,
-[Karim Obegi](mailto:karim.obegi.25@ucl.ac.uk)\*†,
-[Aiden Yiliu Li](mailto:yiliu.li.23@ucl.ac.uk)\*†‡
-
-<sub>\* Equal contribution &nbsp;† University College London &nbsp;‡ Also affiliated with Princeton AI² Lab</sub>
+[Wee Joe Tan](https://tanweejoe.com),
+[Zi Rui Lucas Lim](mailto:zi.lim.25@ucl.ac.uk),
+[Shashank Durgad](mailto:shashank.durgad.25@ucl.ac.uk),
+[Karim Obegi](mailto:karim.obegi.25@ucl.ac.uk),
+[Aiden Yiliu Li](mailto:yiliu.li.23@ucl.ac.uk)
 
 ---
 
