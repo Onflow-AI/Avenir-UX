@@ -11,7 +11,7 @@
 [Zi Rui Lucas Lim](mailto:zi.lim.25@ucl.ac.uk),
 [Shashank Durgad](mailto:shashank.durgad.25@ucl.ac.uk),
 [Karim Obegi](mailto:karim.obegi.25@ucl.ac.uk),
-[Aiden Yiliu Li](mailto:yiliu.li.23@ucl.ac.uk)
+[Aiden Yiliu Li](https://yiliu.li)
 
 ---
 

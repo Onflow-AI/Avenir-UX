@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh api:*)",
+      "WebFetch(domain:princeton-ai2-lab.github.io)",
+      "Bash(curl -sL https://princeton-ai2-lab.github.io/Avenir-Web/)",
+      "Bash(curl:*)",
+      "Bash(brew install:*)",
+      "Bash(pdftoppm -v)",
+      "Bash(pdftotext:*)"
+    ]
+  }
+}
